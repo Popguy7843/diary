@@ -50,10 +50,11 @@ function showHistory() {
 }
 
 function clearHistory() {
-  confirm('Are you sure you want to delete your entire history?');
-  clearEntries();
-  localStorage.clear();
-  myHistory.innerHTML = "";
+  if (confirm('Are you sure you want to delete your entire history?')) {
+    clearEntries();
+    localStorage.clear();
+    myHistory.innerHTML = "";
+  }
 }
 
 // https://stackoverflow.com/questions/985272/selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
