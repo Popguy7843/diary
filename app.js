@@ -87,7 +87,7 @@ myTextField.setAttribute("type", "text");
 // Submit
 let mySubmitBtn = document.createElement("button");
 mySubmitBtn.innerHTML = "Submit";
-mySubmitBtn.setAttribute("onclick", "diarySubmit()");
+mySubmitBtn.setAttribute("onclick", "diarySubmit(); return false;");
 
 // Clear entries
 let myClearEntriesBtn = document.createElement("button");
@@ -123,8 +123,10 @@ myHistory.id = "myHistory";
 
 // Add to page
 document.body.appendChild(myHeader);
-document.body.appendChild(myTextField);
-document.body.appendChild(mySubmitBtn);
+myForm = document.createElement("form");
+document.body.appendChild(myForm);
+myForm.appendChild(myTextField);
+myForm.appendChild(mySubmitBtn);
 document.body.appendChild(myClearEntriesBtn);
 document.body.appendChild(myShowHistoryBtn);
 document.body.appendChild(mySelectHistoryBtn);
