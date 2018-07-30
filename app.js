@@ -30,6 +30,7 @@ function diarySubmit(textfield, history) {
   }
 
   history.value = localStorage.log;
+  history.scrollTop = history.scrollHeight;
 }
 
 function clearVal(node) {
