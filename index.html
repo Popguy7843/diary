@@ -33,7 +33,7 @@
       <button onclick="easyCopy()">Copy History</button>
       <form id="delete-line-container" class="button-input">
         <button id="delete-line" class="danger" onclick="easyDelete(); return false;">Delete Line</button>
-        <input type="number" name="delete-line-number" id="delete-line-number">
+        <input type="number" name="delete-line-number" id="delete-line-number" min="0">
       </form>
       <button onclick="easyClear()" class="danger">Clear History</button>
       <form id="show-timestamps-container">
@@ -53,6 +53,8 @@
   </main>
   <script src="./app.js" async defer></script>
   <script>
+    let logLength = localStorage.log.split("\n").length;
+
     function get(id) {
       return document.getElementById(id);
     }
@@ -65,6 +67,7 @@
         get('show-indices').checked,
         get('clear-on-submission').checked
       );
+      get('delete-line-number').setAttribute("max", "logLength - 1");
     }
 
     function easyShowHistory() {
@@ -80,18 +83,15 @@
     }
 
     function easyDelete() {
-      if (localStorage.log.split("\n").length > -1) {
-        let index = Number(get('delete-line-number').value);
-        if (index > -1 && index < localStorage.log.split("\n").length) {
-          localStorage.log = deleteLine(index);
-          easyShowHistory();
-        }
+      let index = Number(get('delete-line-number').value);
+      if (index < logLength) {
+        localStorage.log = deleteLine(index);
+        easyShowHistory();
       }
     }
 
     function easyClear() {
-      clearStorage();
-      get('history').value = "";
+      clearStorage('history');
     }
   </script>
 </body>

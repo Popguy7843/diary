@@ -65,21 +65,24 @@ function copy(node) {
 }
 
 function deleteLine(index) {
-  if (index === "undefined") {
+  let array = localStorage.log.split("\n");
+
+  if (index === "undefined" || index > array.length - 2) {
     return;
   }
 
-  let array = localStorage.log.split("\n");
   array.splice(index, 1);
   for (let i in array) {
     array[i] = "[" + i + "]" + array[i].substr(array[i].indexOf("]") + 1, array[i].length);
   }
   array.pop();
+  
   return array.join("\n") + "\n";
 }
 
-function clearStorage() {
+function clearStorage(history) {
   if (confirm("Are you sure you want to delete your entire history?")) {
     localStorage.clear();
+    get(history).value = "";
   }
 }
