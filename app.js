@@ -27,10 +27,8 @@ function showEntry(list, input) {
   list.scrollTop = list.scrollHeight;
 }
 
-function removeAllChildren(node) {
-  while (node.firstChild) {
-    node.removeChild(node.firstChild);
-  }
+function clearVal(node) {
+  node.value = "";
 }
 
 function copyNode(node) {
@@ -46,11 +44,10 @@ function showHistory() {
   }
 }
 
-function clearStorage() {
+function clearStorage(history) {
   if (confirm('Are you sure you want to delete your entire history?')) {
-    removeAllChildren(myList);
     localStorage.clear();
-    myHistory.innerHTML = "";
+    clearVal(history)
   }
 }
 
@@ -80,7 +77,7 @@ mySubmitBtn.setAttribute("onclick", "submitAndShow(myTextField, myList); return 
 // Clear entries
 let myClearEntriesBtn = document.createElement("button");
 myClearEntriesBtn.innerHTML = "Clear";
-myClearEntriesBtn.setAttribute("onclick", "removeAllChildren(myList)");
+myClearEntriesBtn.setAttribute("onclick", "clearVal(myList)");
 
 // Show history
 let myShowHistoryBtn = document.createElement("button");
@@ -95,7 +92,7 @@ myCopyHistoryBtn.setAttribute("onclick", "copyNode(myHistory)");
 // Clear history
 let myClearHistoryBtn = document.createElement("button");
 myClearHistoryBtn.innerHTML = "Clear History";
-myClearHistoryBtn.setAttribute("onclick", "clearStorage()")
+myClearHistoryBtn.setAttribute("onclick", "clearStorage(myHistory);")
 myClearHistoryBtn.style.color = "red";
 
 // List
