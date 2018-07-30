@@ -3,10 +3,10 @@
   font-family: 'Courier New', Courier, monospace;
 }
 
-input,
+input[type="text"],
 button {
   display: block;
-  width: 45.75%;
+  width: 49%;
   padding: 5px;
 }
 
@@ -15,8 +15,9 @@ button:hover {
 }
 
 .terminal {
-  background-color: #111;
+  background-color: rgba(17, 17, 17, 0.95);
   border: none;
+  box-shadow: 0 0 3px black;
   color: white;
   display: block;
   margin: 0;
@@ -26,10 +27,50 @@ button:hover {
   z-index: 1;
 }
 
-textarea#myHistory {
+textarea#history {
   height: 100%;
   right: 0;
   top: 0;
   width: 50%;
   word-break: break-all;
+}
+
+.button-input > button {
+  width: 35%;
+  display: inline-block;
+}
+
+.button-input > input {
+  padding: 5px;
+  width: 13%;
+}
+
+.danger {
+  color: red;
+}
+
+@media only screen and (max-width: 600px) {
+
+  input[type="text"],
+  button {
+    width: 100%;
+  }
+
+  textarea#history {
+    height: 20rem;
+    top: 5px;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .button-input > button {
+    width: 50%;
+    display: inline-block;
+  }
+  
+  .button-input > input {
+    padding: 5px;
+    width: 46%;
+  }
 }

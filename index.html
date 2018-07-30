@@ -19,7 +19,81 @@
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
+  <main id="diary-app">
+    <header>
+      <h1>Diary</h1>
+    </header>
+    <div id="control">
+      <div id="submission">
+        <form>
+          <input type="text" id="input">
+          <button onclick="easySubmit(); return false;">Submit</button>
+        </form>
+      </div>
+      <button onclick="easyCopy()">Copy History</button>
+      <form id="delete-line-container" class="button-input">
+        <button id="delete-line" class="danger" onclick="easyDelete(); return false;">Delete Line</button>
+        <input type="number" name="delete-line-number" id="delete-line-number">
+      </form>
+      <button onclick="easyClear()" class="danger">Clear History</button>
+      <form id="show-timestamps-container">
+        <input checked="" id="show-timestamps" type="checkbox" onclick="easyShowHistory()">
+        <label class="label" for="show-timestamps">Show timestamps</label>
+      </form>
+      <form id="show-indices-container">
+        <input checked="" id="show-indices" type="checkbox" onclick="easyShowHistory()">
+        <label class="label" for="show-indices">Show indices</label>
+      </form>
+      <form id="clear-on-submission-container">
+        <input checked="" id="clear-on-submission" type="checkbox">
+        <label class="label" for="clear-on-submission">Clear on submission</label>
+      </form>
+    </div>
+    <textarea id="history" class="terminal"></textarea>
+  </main>
   <script src="./app.js" async defer></script>
+  <script>
+    function get(id) {
+      return document.getElementById(id);
+    }
+
+    function easySubmit() {
+      diarySubmit(
+        get('input'),
+        get('history'),
+        get('show-timestamps').checked,
+        get('show-indices').checked,
+        get('clear-on-submission').checked
+      );
+    }
+
+    function easyShowHistory() {
+      showHistory(
+        get('history'),
+        get('show-timestamps').checked,
+        get('show-indices').checked,
+      );
+    }
+
+    function easyCopy() {
+      copy(get('history'));
+    }
+
+    function easyDelete() {
+      if (localStorage.log.split("\n").length > -1) {
+        let index = Number(get('delete-line-number').value);
+        if (index > -1 && index < localStorage.log.split("\n").length) {
+          localStorage.log = deleteLine(index);
+          easyShowHistory();
+        }
+      }
+    }
+
+    function easyClear() {
+      clearStorage();
+      get('history').value = "";
+    }
+  </script>
 </body>
 
 </html>

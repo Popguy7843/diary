@@ -1,92 +1,85 @@
 // --- Main functions ---
-function showLogs(display) {
-  if (localStorage.log === "") {
-    return;
-  }
-}
-
 function formatEntry(text) {
   let d = new Date();
   let formattedDate = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear() + " " + d.toLocaleTimeString();
   return formattedDate + " - " + text;
 }
 
-function diarySubmit(textfield, history) {
+function diarySubmit(textfield, history, timestamp = true, indices = true, clearOnSubmission = true) {
   if (textfield.value === "") {
     return;
   }
 
-  let entry = formatEntry(textfield.value);
   if (typeof (Storage) === "undefined") {
     alert("Sorry, your browser does not support web storage...");
   } else {
+    let entry = formatEntry(textfield.value) + "\n";
     if (localStorage.log) {
-      localStorage.log += entry + "\n";
+      localStorage.log += "[" + (localStorage.log.split("\n").length - 1) + "] " + entry;
     } else {
-      localStorage.log = entry + "\n";
+      localStorage.log = "[0] " + entry;
     }
-
-    textfield = "";
   }
 
-  history.value = localStorage.log;
+  if (clearOnSubmission) {
+    textfield.value = "";
+  }
+
+  showHistory(history, timestamp, indices);
+}
+
+function showHistory(history, timestamp = true, indices = true) {
+  let logArray = localStorage.log.split("\n");
+  let noStamps = logArray.map(function (entry) {
+    return entry.substr(entry.indexOf("-") + 2, entry.length)
+  }).join("\n");
+  if (timestamp && indices) {
+    history.value = localStorage.log;
+  } else if (timestamp) {
+    let timeStampedLog = [];
+    for (let i in logArray) {
+      timeStampedLog.push(logArray[i].substr(logArray[i].indexOf("]"), logArray[i].length));
+    }
+    history.value = timeStampedLog.join("\n");
+  } else if (indices) {
+    let indexedLog = [];
+    for (let i in logArray) {
+      indexedLog.push(logArray[i].substr(0, logArray[i].indexOf("]")) + logArray[i].substr(logArray[i].indexOf("-") + 1, logArray[i].length));
+    }
+    history.value = indexedLog.join("\n");
+  } else {
+    history.value = noStamps;
+  }
+
   history.scrollTop = history.scrollHeight;
-}
 
-function clearVal(node) {
-  node.value = "";
-}
-
-function copyNode(node) {
-  node.select();
-  document.execCommand('Copy');
-}
-
-function clearStorage(history) {
-  if (confirm('Are you sure you want to delete your entire history?')) {
-    localStorage.clear();
-    clearVal(history)
+  if (localStorage.log === "undefined") {
+    history.value = "";
+    localStorage.log = "";
   }
 }
 
-// --- Structure ---
-// Header
-let myHeader = document.createElement("h1");
-myHeader.innerHTML = "Diary";
+function copy(node) {
+  node.select();
+  document.execCommand("Copy");
+}
 
-// Submit
-let mySubmitBtn = document.createElement("button");
-mySubmitBtn.innerHTML = "Submit";
-mySubmitBtn.setAttribute("onclick", "diarySubmit(myTextField, myHistory); return false;");
+function deleteLine(index) {
+  if (index === "undefined") {
+    return;
+  }
 
-// Copy history
-let myCopyHistoryBtn = document.createElement("button");
-myCopyHistoryBtn.innerHTML = "Copy History";
-myCopyHistoryBtn.setAttribute("onclick", "copyNode(myHistory)");
+  let array = localStorage.log.split("\n");
+  array.splice(index, 1);
+  for (let i in array) {
+    array[i] = "[" + i + "]" + array[i].substr(array[i].indexOf("]") + 1, array[i].length);
+  }
+  array.pop();
+  return array.join("\n") + "\n";
+}
 
-// Clear history
-let myClearHistoryBtn = document.createElement("button");
-myClearHistoryBtn.innerHTML = "Clear History";
-myClearHistoryBtn.setAttribute("onclick", "clearStorage(myHistory);")
-myClearHistoryBtn.style.color = "red";
-
-// History
-let myHistory = document.createElement("textarea");
-myHistory.innerHTML = "";
-myHistory.id = "myHistory";
-myHistory.className = "terminal";
-myHistory.readOnly = true;
-
-// Textfield
-let myTextField = document.createElement("input");
-myTextField.setAttribute("type", "text");
-
-// Add to page
-document.body.appendChild(myHeader);
-myForm = document.createElement("form");
-document.body.appendChild(myForm);
-myForm.appendChild(myTextField);
-myForm.appendChild(mySubmitBtn);
-document.body.appendChild(myCopyHistoryBtn);
-document.body.appendChild(myClearHistoryBtn);
-document.body.appendChild(myHistory);
+function clearStorage() {
+  if (confirm("Are you sure you want to delete your entire history?")) {
+    localStorage.clear();
+  }
+}
