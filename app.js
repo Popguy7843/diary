@@ -1,44 +1,41 @@
-// --- Functions ---
-function diaryEntry(text) {
-  let li = document.createElement('li');
+// --- Main functions ---
+function formatEntry(text) {
   let d = new Date();
   let formattedDate = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear() + " " + d.toLocaleTimeString();
-  let textNode = document.createTextNode(formattedDate + " - " + text);
-  li.appendChild(textNode);
-  return li;
+  return formattedDate + " - " + text;
 }
 
-function diarySubmit() {
-  let nextEntry = diaryEntry(myTextField.value);
-  let text = nextEntry.innerHTML;
-  if (myTextField.value !== "") {
-    if (typeof (Storage) !== "undefined") {
-
-      // Store entry in the history on the right
-      if (localStorage.log) {
-        localStorage.log += "<p>" + text + "</p>";
-      } else {
-        localStorage.log = "<p>" + text + "</p>";
-      }
-
-      // Show entry on the left
-      myList.appendChild(nextEntry);
-      console.log(text);
-      myList.scrollTop = myList.scrollHeight;
-
-      // Clear text field
-      myTextField.value = "";
-
+function diarySubmit(textfield) {
+  let entry = formatEntry(textfield.value);
+  if (typeof (Storage) === "undefined") {
+    alert("Sorry, your browser does not support web storage...");
+  } else {
+    if (localStorage.log) {
+      localStorage.log += entry + "\n";
     } else {
-      alert("Sorry, your browser does not support web storage...");
+      localStorage.log = entry + "\n";
     }
+
+    textfield = "";
   }
 }
 
-function clearEntries() {
-  while (myList.firstChild) {
-    myList.removeChild(myList.firstChild)
-  };
+function showEntry(list, input) {
+  let entry = formatEntry(input.value)
+  list.value += entry + "\n";
+  console.log(entry);
+  list.scrollTop = list.scrollHeight;
+}
+
+function removeAllChildren(node) {
+  while (node.firstChild) {
+    node.removeChild(node.firstChild);
+  }
+}
+
+function copyNode(node) {
+  node.select();
+  document.execCommand('Copy');
 }
 
 function showHistory() {
@@ -49,33 +46,24 @@ function showHistory() {
   }
 }
 
-function clearHistory() {
+function clearStorage() {
   if (confirm('Are you sure you want to delete your entire history?')) {
-    clearEntries();
+    removeAllChildren(myList);
     localStorage.clear();
     myHistory.innerHTML = "";
   }
 }
 
-// https://stackoverflow.com/questions/985272/selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
-function selectText(node) {
-  if (document.body.createTextRange) {
-    const range = document.body.createTextRange();
-    range.moveToElementText(node);
-    range.select();
-  } else if (window.getSelection) {
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(node);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  } else {
-    console.warn("Could not select text in node: Unsupported browser.");
+function submitAndShow(textfield, list) {
+  if (textfield.value === "") {
+    return;
   }
+
+  diarySubmit(textfield);
+  showEntry(list, textfield);
 }
 
 // --- Structure ---
-
 // Header
 let myHeader = document.createElement("h1");
 myHeader.innerHTML = "Diary";
@@ -87,39 +75,41 @@ myTextField.setAttribute("type", "text");
 // Submit
 let mySubmitBtn = document.createElement("button");
 mySubmitBtn.innerHTML = "Submit";
-mySubmitBtn.setAttribute("onclick", "diarySubmit(); return false;");
+mySubmitBtn.setAttribute("onclick", "submitAndShow(myTextField, myList); return false;");
 
 // Clear entries
 let myClearEntriesBtn = document.createElement("button");
 myClearEntriesBtn.innerHTML = "Clear";
-myClearEntriesBtn.setAttribute("onclick", "clearEntries()");
+myClearEntriesBtn.setAttribute("onclick", "removeAllChildren(myList)");
 
 // Show history
 let myShowHistoryBtn = document.createElement("button");
 myShowHistoryBtn.innerHTML = "Show History";
 myShowHistoryBtn.setAttribute("onclick", "showHistory()");
 
-// Select history
-let mySelectHistoryBtn = document.createElement("button");
-mySelectHistoryBtn.innerHTML = "Select History";
-mySelectHistoryBtn.setAttribute("onclick", "selectText(myHistory)");
+// Copy history
+let myCopyHistoryBtn = document.createElement("button");
+myCopyHistoryBtn.innerHTML = "Copy History";
+myCopyHistoryBtn.setAttribute("onclick", "copyNode(myHistory)");
 
 // Clear history
 let myClearHistoryBtn = document.createElement("button");
 myClearHistoryBtn.innerHTML = "Clear History";
-myClearHistoryBtn.setAttribute("onclick", "clearHistory()")
+myClearHistoryBtn.setAttribute("onclick", "clearStorage()")
 myClearHistoryBtn.style.color = "red";
 
 // List
-let myList = document.createElement("ul", {
-  is: "my-list"
-});
+let myList = document.createElement("textarea");
 myList.id = "myList";
+myList.className = "terminal";
+myList.readOnly = true;
 
 // History
-let myHistory = document.createElement("div");
+let myHistory = document.createElement("textarea");
 myHistory.innerHTML = "";
 myHistory.id = "myHistory";
+myHistory.className = "terminal";
+myHistory.readOnly = true;
 
 // Add to page
 document.body.appendChild(myHeader);
@@ -129,7 +119,7 @@ myForm.appendChild(myTextField);
 myForm.appendChild(mySubmitBtn);
 document.body.appendChild(myClearEntriesBtn);
 document.body.appendChild(myShowHistoryBtn);
-document.body.appendChild(mySelectHistoryBtn);
+document.body.appendChild(myCopyHistoryBtn);
 document.body.appendChild(myClearHistoryBtn);
 document.body.appendChild(myList);
 document.body.appendChild(myHistory);
