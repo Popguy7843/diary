@@ -1,12 +1,5 @@
 * {
   box-sizing: border-box;
-}
-
-button,
-div,
-h1,
-input,
-li {
   font-family: 'Courier New', Courier, monospace;
 }
 
@@ -21,10 +14,6 @@ button:hover {
   cursor: pointer;
 }
 
-li {
-  left: 0;
-}
-
 .terminal {
   background-color: #111;
   border: none;
@@ -37,40 +26,9 @@ li {
   z-index: 1;
 }
 
-textarea#myList {
-  height: 48%;
-  margin-top: 5px;
-  padding-bottom: 10px;
-  width: 45%;
-}
-
 textarea#myHistory {
   height: 100%;
   right: 0;
   top: 0;
   width: 50%;
-}
-
-/* 
-Triangle Bullet Points 
-https://css-tricks.com/snippets/css/triangular-list-bullets/
-*/
-
-ul {
-  margin: 0.75em 0;
-  padding: 0 1em;
-  list-style: none;
-}
-
-li:before {
-  content: "";
-  border-color: transparent #111;
-  border-style: solid;
-  border-width: 0.35em 0 0.35em 0.45em;
-  display: block;
-  height: 0;
-  width: 0;
-  left: -1em;
-  top: 0.9em;
-  position: relative;
 }
