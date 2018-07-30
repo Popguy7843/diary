@@ -31,4 +31,5 @@ textarea#myHistory {
   right: 0;
   top: 0;
   width: 50%;
+  word-break: break-all;
 }
