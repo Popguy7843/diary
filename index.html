@@ -58,7 +58,9 @@
   </main>
   <script src="./app.js" async defer></script>
   <script>
-    let logLength = localStorage.log.split("\n").length;
+    function logLength () {
+      return localStorage.log.split("\n").length; 
+    }
 
     function get(id) {
       return document.getElementById(id);
@@ -72,7 +74,7 @@
         get('show-indices').checked,
         get('clear-on-submission').checked
       );
-      get('delete-line-number').setAttribute("max", "logLength - 1");
+      get('delete-line-number').setAttribute("max", "logLength() - 1");
     }
 
     function easyShowHistory() {
@@ -89,7 +91,7 @@
 
     function easyDelete() {
       let index = Number(get('delete-line-number').value);
-      if (index < logLength) {
+      if (index > -1 && index < logLength() - 1) {
         localStorage.log = deleteLine(index);
         easyShowHistory();
       }
