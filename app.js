@@ -43,13 +43,13 @@ function showHistory(history, timestamp = true, indices = true) {
     history.value = localStorage.log;
   } else if (timestamp) {
     let timeStampedLog = [];
-    for (let i in logArray) {
+    for (let i = 0; i < logArray.length; i++) {
       timeStampedLog.push(logArray[i].substr(logArray[i].indexOf(']') + 2, logArray[i].length));
     }
     history.value = timeStampedLog.join('\n');
   } else if (indices) {
     let indexedLog = [];
-    for (let i in logArray) {
+    for (let i = 0; i < logArray.length; i++) {
       indexedLog.push(logArray[i].substr(0, logArray[i].indexOf(']') + 1) + logArray[i].substr(logArray[i].indexOf('-') + 1, logArray[i].length));
     }
     history.value = indexedLog.join('\n');
@@ -80,7 +80,7 @@ function deleteLine(index) {
   }
 
   array.splice(index, 1);
-  for (let i in array) {
+  for (let i = 0; i < array.length; i++) {
     array[i] = '[' + i + ']' + array[i].substr(array[i].indexOf(']') + 1, array[i].length);
   }
   array.pop();
