@@ -59,7 +59,7 @@
   <script src="./app.js" async defer></script>
   <script>
     function logLength () {
-      return localStorage.log.split("\n").length; 
+      return localStorage.log.split('\n').length; 
     }
 
     function get(id) {
@@ -74,7 +74,7 @@
         get('show-indices').checked,
         get('clear-on-submission').checked
       );
-      get('delete-line-number').setAttribute("max", "logLength() - 1");
+      get('delete-line-number').setAttribute('max', 'logLength() - 1');
     }
 
     function easyShowHistory() {
