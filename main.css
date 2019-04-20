@@ -80,7 +80,8 @@ textarea#history {
 }
 
 .button-input {
-  display: inline-block;
+  /* display: inline-block; */
+  display: none;
 }
 
 .button-input > button {
